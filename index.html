@@ -1129,7 +1129,7 @@
     <li><a href="#projects">Projets</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
-  <a href="#" class="nav-cta" id="downloadCV">↓ CV</a>
+  <a href="CV_SLINGUI_Saifeddine.pdf" class="nav-cta" id="downloadCV" download="CV_SLINGUI_Saifeddine.pdf">↓ CV</a>
   <button class="hamburger" id="hamburger" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
@@ -1885,7 +1885,9 @@
   }
 
   // ─── FORM SUBMIT ───
-  function handleFormSubmit(btn) {
+  const WEB3FORMS_KEY = 'd0427405-df3d-4d81-8f4f-eec3a0d863e5'; // ← remplacez par votre clé web3forms.com
+
+  async function handleFormSubmit(btn) {
     const form = btn.closest('.contact-form');
     const prenom = form.querySelector('[name="prenom"]').value.trim();
     const nom = form.querySelector('[name="nom"]').value.trim();
@@ -1894,28 +1896,73 @@
     const message = form.querySelector('[name="message"]').value.trim();
 
     if (!prenom || !email || !message) {
-      alert('Veuillez remplir au minimum votre prénom, votre email et votre message.');
+      showFormError(form, 'Veuillez remplir au minimum votre prénom, votre email et votre message.');
       return;
     }
 
-    const subject = encodeURIComponent(`[Portfolio] Contact de ${prenom} ${nom}`.trim());
-    const body = encodeURIComponent(`Prénom : ${prenom}\nNom : ${nom}\nEmail : ${email}\nEntreprise : ${entreprise}\n\nMessage :\n${message}`);
-    window.location.href = `mailto:slingui.saifeddine@gmail.com?subject=${subject}&body=${body}`;
-
-    btn.textContent = '✓ Message envoyé !';
-    btn.style.background = 'linear-gradient(135deg, #10b981, #06b6d4)';
+    btn.textContent = 'Envoi en cours...';
     btn.disabled = true;
-    setTimeout(() => {
+    btn.style.opacity = '0.7';
+
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_KEY,
+          subject: `[Portfolio] Message de ${prenom} ${nom}`.trim(),
+          from_name: `${prenom} ${nom}`.trim(),
+          email: email,
+          entreprise: entreprise || 'Non renseignée',
+          message: message,
+          botcheck: ''
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        btn.textContent = '✓ Message envoyé !';
+        btn.style.background = 'linear-gradient(135deg, #10b981, #06b6d4)';
+        btn.style.opacity = '1';
+        form.querySelectorAll('input, textarea').forEach(el => el.value = '');
+        clearFormError(form);
+        setTimeout(() => {
+          btn.textContent = 'Envoyer le message →';
+          btn.style.background = '';
+          btn.disabled = false;
+        }, 4000);
+      } else {
+        throw new Error(data.message || 'Erreur');
+      }
+    } catch (err) {
       btn.textContent = 'Envoyer le message →';
-      btn.style.background = '';
+      btn.style.opacity = '1';
       btn.disabled = false;
-    }, 3000);
+      showFormError(form, 'Une erreur est survenue. Veuillez réessayer ou me contacter directement par email.');
+    }
+
+  }
+
+  function showFormError(form, msg) {
+    let el = form.querySelector('.form-error');
+    if (!el) {
+      el = document.createElement('p');
+      el.className = 'form-error';
+      el.style.cssText = 'color:#ef4444;font-size:0.85rem;margin-top:0.5rem;font-family:var(--font-mono)';
+      form.appendChild(el);
+    }
+    el.textContent = msg;
+  }
+
+  function clearFormError(form) {
+    const el = form.querySelector('.form-error');
+    if (el) el.remove();
   }
 
   // ─── DOWNLOAD CV ───
   document.getElementById('downloadCV').addEventListener('click', e => {
-    e.preventDefault();
-    alert('Pour télécharger le CV, remplacez ce lien par le chemin vers votre fichier PDF.');
+    fetch('CV_SLINGUI_Saifeddine.pdf', { method: 'HEAD' })
+      .then(r => { if (!r.ok) { e.preventDefault(); alert('Fichier CV introuvable. Placez "CV_SLINGUI_Saifeddine.pdf" dans le dossier du portfolio.'); } })
+      .catch(() => {});
   });
 
   // ─── PARALLAX ORBS ───
