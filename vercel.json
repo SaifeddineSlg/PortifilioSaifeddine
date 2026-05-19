@@ -1,5 +1,3 @@
 {
-  "rewrites": [
-    { "source": "/", "destination": "/index-mostaql.html" }
-  ]
+  "rewrites": [{ "source": "/", "destination": "/index.html" }]
 }
