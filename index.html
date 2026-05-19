@@ -54,6 +54,17 @@
     overflow-x: hidden;
   }
 
+  #bg-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.45;
+  }
+
+  body > *:not(#bg-canvas) {  z-index: 1; }
+
   ::selection { background: var(--accent); color: white; }
 
   ::-webkit-scrollbar { width: 5px; }
@@ -75,26 +86,28 @@
   /* ─── NAV ─── */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-    padding: 1rem 2rem;
+    padding: 1.2rem 3rem;
     display: flex; align-items: center; justify-content: space-between;
-    background: rgba(248,248,255,0.85);
-    backdrop-filter: blur(24px);
-    border-bottom: 1px solid var(--border);
+    background: rgba(248,248,255,0.80);
+    backdrop-filter: blur(32px) saturate(1.6);
+    -webkit-backdrop-filter: blur(32px) saturate(1.6);
+    border-bottom: 1px solid rgba(123,110,246,0.10);
     transition: var(--transition);
-    box-shadow: 0 2px 20px rgba(100,80,220,0.06);
+    box-shadow: 0 2px 30px rgba(100,80,220,0.07);
   }
 
   nav.scrolled {
-    background: rgba(255,255,255,0.95);
-    box-shadow: 0 4px 30px rgba(100,80,220,0.10);
+    background: rgba(255,255,255,0.92);
+    box-shadow: 0 4px 40px rgba(100,80,220,0.12);
   }
 
   .nav-logo {
     font-family: var(--font-display);
-    font-weight: 800; font-size: 1.15rem;
+    font-weight: 800; font-size: 1.45rem;
     color: var(--text);
-    letter-spacing: -0.02em;
+    letter-spacing: -0.04em;
     text-decoration: none;
+    display: flex; align-items: center; gap: 0.4rem;
   }
 
   .nav-logo span {
@@ -103,41 +116,46 @@
     background-clip: text;
   }
 
-  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
 
   .nav-links a {
-    font-family: var(--font-mono);
-    font-size: 0.8rem; color: var(--text2);
-    text-decoration: none; letter-spacing: 0.04em;
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text2);
+    text-decoration: none;
+    letter-spacing: 0.01em;
     transition: color var(--transition);
-    position: relative; padding-bottom: 2px;
+    position: relative; padding-bottom: 3px;
   }
 
   .nav-links a::after {
-    content: ''; position: absolute; bottom: -2px; left: 0;
+    content: ''; position: absolute; bottom: -3px; left: 0;
     width: 0; height: 2px;
     background: linear-gradient(90deg, var(--accent), var(--teal));
     border-radius: 2px;
     transition: width var(--transition);
   }
 
-  .nav-links a:hover { color: var(--text); }
+  .nav-links a:hover { color: var(--accent); }
   .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
   .nav-links a.active { color: var(--accent); }
 
   .nav-cta {
-    font-family: var(--font-mono); font-size: 0.8rem;
-    padding: 0.5rem 1.2rem;
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 700;
+    padding: 0.6rem 1.5rem;
     background: linear-gradient(135deg, var(--accent), var(--accent2));
-    color: white; border: none; border-radius: var(--radius-sm);
+    color: white; border: none; border-radius: 50px;
     cursor: pointer; text-decoration: none;
-    transition: var(--transition); letter-spacing: 0.05em;
-    box-shadow: 0 4px 16px var(--accent-glow);
+    transition: var(--transition); letter-spacing: 0.02em;
+    box-shadow: 0 4px 18px var(--accent-glow);
   }
 
   .nav-cta:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(123,110,246,0.35);
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 10px 28px rgba(123,110,246,0.38);
   }
 
   .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
@@ -149,7 +167,7 @@
     display: flex; align-items: center;
     padding: 8rem 2rem 5rem;
     position: relative; overflow: hidden;
-    background: linear-gradient(135deg, #f8f8ff 0%, #f0efff 40%, #e8f4ff 100%);
+    background: transparent;
   }
 
   .hero-orb {
@@ -527,7 +545,7 @@
   }
 
   /* ─── ABOUT ─── */
-  #about { background: white; }
+  #about { background: transparent; }
 
   .about-grid {
     display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
@@ -618,7 +636,7 @@
   .about-badge-text { font-size: 0.7rem; opacity: 0.9; }
 
   /* ─── SKILLS ─── */
-  #skills { background: var(--bg); }
+  #skills { background: transparent; }
 
   .skills-categories {
     display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;
@@ -685,7 +703,7 @@
   }
 
   /* ─── EXPERIENCE ─── */
-  #experience { background: white; }
+  #experience { background: transparent; }
 
   .timeline { position: relative; padding-left: 2rem; }
 
@@ -784,7 +802,7 @@
   }
 
   /* ─── PROJECTS ─── */
-  #projects { background: var(--bg); }
+  #projects { background: transparent; }
 
   .projects-grid {
     display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.5rem;
@@ -870,7 +888,7 @@
   }
 
   /* ─── CERTIFICATIONS ─── */
-  #certifications { background: white; }
+  #certifications { background: transparent; }
 
   .certs-grid {
     display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;
@@ -934,9 +952,7 @@
   .edu-years { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text3); }
 
   /* ─── CONTACT ─── */
-  #contact {
-    background: linear-gradient(135deg, var(--bg3) 0%, var(--bg) 100%);
-  }
+  #contact { background: transparent; }
 
   .contact-wrapper {
     display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start;
@@ -1108,11 +1124,19 @@
   .anime-hero-card { opacity: 0; }
 
   .skill-tag { opacity: 0; transform: translateX(-18px); }
+  .skill-category { opacity: 0; transform: translateY(30px); }
 
   .project-card { opacity: 0; transform: translateY(40px) scale(0.96); }
 
+  .cert-card, .edu-card { opacity: 0; transform: translateY(30px) scale(0.95); }
+
+  .contact-item { opacity: 0; transform: translateX(-30px); }
+
   /* ─── MAGNETIC BTN ─── */
   .magnetic { transition: transform 0.2s cubic-bezier(0.23,1,0.32,1); }
+
+  nav { opacity: 1; }
+  .highlight-item { opacity: 0; }
 
   /* ─── ORBS MORPHING ─── */
   .hero-orb-1, .hero-orb-2 { will-change: border-radius, transform; }
@@ -1132,6 +1156,7 @@
 </style>
 </head>
 <body>
+<canvas id="bg-canvas"></canvas>
 
 <!-- SCROLL PROGRESS -->
 <div class="scroll-progress" id="scrollProgress"></div>
@@ -1419,11 +1444,11 @@
           </div>
           <div class="exp-projects">
             <div class="exp-project">
-              <div class="exp-project-name">🛠 L'Outil & MonEspacePro — .NET / Angular</div>
+              <div class="exp-project-name">🛠 Loutil & MonEspacePro — .NET / Angular</div>
               <ul class="exp-bullets">
                 <li>Migration de .NET Framework 4.6 vers .NET Core 6</li>
                 <li>Automatisation de la gestion des clés SSH sur le serveur de production</li>
-                <li>Adaptation des appels de taxes et d'aides via l'outil externe ELAP</li>
+                <li>Adaptation des appels de taxes et d'aides via loutil externe ELAP</li>
                 <li>Intégration des modules Boutique, Déclaration de créances et Comptes automatiques</li>
                 <li>Correction des anomalies, analyse des logs et mise en place de correctifs rapides</li>
                 <li>Refonte de la logique back-end et création de nouvelles API REST</li>
@@ -1518,7 +1543,7 @@
           <div class="project-links"><span class="project-link">↗</span></div>
         </div>
         <div class="project-body">
-          <div class="project-name">L'Outil CNM — Back-office Musical</div>
+          <div class="project-name">Loutil CNM — Back-office Musical</div>
           <div class="project-desc">Plateforme de gestion complète pour le Centre National de la Musique. Migration .NET Core, API REST, modules de déclaration de créances et boutique intégrée.</div>
           <div class="project-tech">
             <span class="pill">.NET Core 6</span>
@@ -1975,6 +2000,75 @@
     document.querySelector('.hero-orb-2').style.transform = `translate(${-y * 0.04}px, ${y * 0.06}px)`;
   });
 
+  // ─── BACKGROUND CANVAS (constellation) ───
+  (function() {
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    const DOTS = 55, CONNECT_DIST = 140, COLOR = '123,110,246';
+    let dots = [], W, H, mouse = { x: -999, y: -999 };
+
+    function resize() {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    }
+
+    function init() {
+      dots = [];
+      for (let i = 0; i < DOTS; i++) {
+        dots.push({
+          x: Math.random() * W, y: Math.random() * H,
+          vx: (Math.random() - 0.5) * 0.35,
+          vy: (Math.random() - 0.5) * 0.35,
+          r: Math.random() * 2 + 1.2
+        });
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      dots.forEach(d => {
+        d.x += d.vx; d.y += d.vy;
+        if (d.x < 0 || d.x > W) d.vx *= -1;
+        if (d.y < 0 || d.y > H) d.vy *= -1;
+
+        // attraction douce vers la souris
+        const dx = mouse.x - d.x, dy = mouse.y - d.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 180) { d.vx += dx * 0.00015; d.vy += dy * 0.00015; }
+
+        // limiter la vitesse
+        const speed = Math.sqrt(d.vx * d.vx + d.vy * d.vy);
+        if (speed > 0.7) { d.vx *= 0.98; d.vy *= 0.98; }
+
+        ctx.beginPath();
+        ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${COLOR},0.5)`;
+        ctx.fill();
+      });
+
+      // lignes entre points proches
+      for (let i = 0; i < dots.length; i++) {
+        for (let j = i + 1; j < dots.length; j++) {
+          const dx = dots[i].x - dots[j].x, dy = dots[i].y - dots[j].y;
+          const d = Math.sqrt(dx * dx + dy * dy);
+          if (d < CONNECT_DIST) {
+            ctx.beginPath();
+            ctx.moveTo(dots[i].x, dots[i].y);
+            ctx.lineTo(dots[j].x, dots[j].y);
+            ctx.strokeStyle = `rgba(${COLOR},${0.18 * (1 - d / CONNECT_DIST)})`;
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', () => { resize(); init(); });
+    window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+    resize(); init(); draw();
+  })();
+
   // ─── ANIME.JS ANIMATIONS ───
 
   // 1. Hero entrance — cascade stagger
@@ -2000,21 +2094,26 @@
     duration: 10000, easing: 'easeInOutSine', loop: true, direction: 'alternate'
   });
 
-  // 3. Skill tags — stagger au scroll
+  // 3. Skill categories + tags — stagger au scroll
   const skillObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         anime({
+          targets: entry.target,
+          opacity: [0, 1], translateY: [30, 0],
+          duration: 600, easing: 'easeOutExpo'
+        });
+        anime({
           targets: entry.target.querySelectorAll('.skill-tag'),
           opacity: [0, 1], translateX: [-18, 0],
           duration: 500, easing: 'easeOutExpo',
-          delay: anime.stagger(40)
+          delay: anime.stagger(35, { start: 200 })
         });
         skillObserver.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.15 });
-  document.querySelectorAll('.skills-group').forEach(g => skillObserver.observe(g));
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.skill-category').forEach(g => skillObserver.observe(g));
 
   // 4. Project cards — stagger avec léger rebond
   const projectObserver = new IntersectionObserver((entries) => {
@@ -2094,14 +2193,14 @@
     });
   });
 
-  // 9. Cert cards pop-in
+  // 9. Cert + edu cards pop-in
   const certObs = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         anime({
           targets: entry.target.querySelectorAll('.cert-card, .edu-card'),
           opacity: [0, 1], scale: [0.88, 1], translateY: [30, 0],
-          duration: 600, easing: 'easeOutBack', delay: anime.stagger(100)
+          duration: 600, easing: 'easeOutBack', delay: anime.stagger(120)
         });
         certObs.unobserve(entry.target);
       }
@@ -2109,6 +2208,57 @@
   }, { threshold: 0.1 });
   const certSection = document.getElementById('certifications');
   if (certSection) certObs.observe(certSection);
+
+  // 10. Contact items — glissement depuis gauche en stagger
+  const contactObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        anime({
+          targets: entry.target.querySelectorAll('.contact-item'),
+          opacity: [0, 1], translateX: [-30, 0],
+          duration: 600, easing: 'easeOutExpo', delay: anime.stagger(100)
+        });
+        contactObs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  const contactSection = document.getElementById('contact');
+  if (contactSection) contactObs.observe(contactSection);
+
+
+  // 12. About section highlights — pop-in stagger
+  const aboutObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        anime({
+          targets: entry.target.querySelectorAll('.highlight-item'),
+          opacity: [0, 1], scale: [0.85, 1], translateY: [20, 0],
+          duration: 500, easing: 'easeOutBack', delay: anime.stagger(80)
+        });
+        aboutObs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  const aboutSection = document.getElementById('about');
+  if (aboutSection) aboutObs.observe(aboutSection);
+
+  // 13. Hero tech pills — stagger rapide
+  anime({
+    targets: '.tech-pills .pill',
+    opacity: [0, 1], translateY: [10, 0],
+    duration: 400, easing: 'easeOutExpo',
+    delay: anime.stagger(60, { start: 1200 })
+  });
+
+  // 14. Hover shake sur les project cards
+  document.querySelectorAll('.project-card').forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      anime({ targets: card, translateY: -6, boxShadow: '0 20px 40px rgba(123,110,246,0.18)', duration: 300, easing: 'easeOutExpo' });
+    });
+    card.addEventListener('mouseleave', () => {
+      anime({ targets: card, translateY: 0, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', duration: 400, easing: 'easeOutExpo' });
+    });
+  });
 </script>
 </body>
 </html>
