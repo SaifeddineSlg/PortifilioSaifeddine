@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
 <style>
   :root {
     --bg: #f8f8ff;
@@ -1097,6 +1098,25 @@
 
   .counter { display: inline-block; }
 
+  /* ─── ANIME.JS INIT STATES ─── */
+  .anime-hero-badge,
+  .anime-hero-name,
+  .anime-hero-title,
+  .anime-hero-desc,
+  .anime-hero-btns,
+  .anime-hero-stats,
+  .anime-hero-card { opacity: 0; }
+
+  .skill-tag { opacity: 0; transform: translateX(-18px); }
+
+  .project-card { opacity: 0; transform: translateY(40px) scale(0.96); }
+
+  /* ─── MAGNETIC BTN ─── */
+  .magnetic { transition: transform 0.2s cubic-bezier(0.23,1,0.32,1); }
+
+  /* ─── ORBS MORPHING ─── */
+  .hero-orb-1, .hero-orb-2 { will-change: border-radius, transform; }
+
   /* ─── TYPING CURSOR ─── */
   .typed-cursor {
     display: inline-block; width: 2px; height: 1em;
@@ -1144,26 +1164,26 @@
 
   <div class="hero-inner">
     <div class="hero-content">
-      <span class="hero-badge">Disponible pour missions</span>
-      <h1 class="hero-name">
+      <span class="hero-badge anime-hero-badge">Disponible pour missions</span>
+      <h1 class="hero-name anime-hero-name">
         <span class="first">SLINGUI</span>
         <span class="last">Saifeddine</span>
       </h1>
-      <p class="hero-title">// <span id="typedText"></span><span class="typed-cursor"></span></p>
-      <p class="hero-desc">
+      <p class="hero-title anime-hero-title">// <span id="typedText"></span><span class="typed-cursor"></span></p>
+      <p class="hero-desc anime-hero-desc">
         Ingénieur polyvalent maîtrisant le cycle complet de développement — architecture back-end, API REST, interfaces utilisateur — avec une forte culture de la qualité et des bonnes pratiques.
       </p>
-      <div class="hero-actions">
-        <a href="#contact" class="btn-primary">
+      <div class="hero-actions anime-hero-btns">
+        <a href="#contact" class="btn-primary magnetic">
           <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
           Me contacter
         </a>
-        <a href="#experience" class="btn-secondary">
+        <a href="#experience" class="btn-secondary magnetic">
           <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           Voir mon parcours
         </a>
       </div>
-      <div class="hero-stats">
+      <div class="hero-stats anime-hero-stats">
         <div class="stat-item">
           <span class="stat-number counter" data-target="16">0</span><span class="stat-number" style="font-size:1.2rem">+</span>
           <span class="stat-label">Ans d'exp.</span>
@@ -1180,7 +1200,7 @@
     </div>
 
     <div class="hero-visual">
-      <div class="hero-card">
+      <div class="hero-card anime-hero-card">
         <div class="hero-avatar" id="heroAvatar">
           <img src="photo.jpg" alt="Saifeddine SLINGUI" onerror="this.style.display='none';this.parentElement.insertAdjacentText('afterbegin','SS')">
         </div>
@@ -1815,33 +1835,16 @@
     tick();
   })();
 
-  // ─── COUNTER ANIMATION ───
-  function animateCounter(el) {
-    const target = parseInt(el.dataset.target);
-    const duration = 1500;
-    const step = target / (duration / 16);
-    let current = 0;
-    const timer = setInterval(() => {
-      current += step;
-      if (current >= target) { current = target; clearInterval(timer); }
-      el.textContent = Math.floor(current);
-    }, 16);
-  }
-
-  // ─── INTERSECTION OBSERVER ───
+  // ─── INTERSECTION OBSERVER (fade-in uniquement — counters et timeline gérés par anime.js) ───
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('visible');
-        if (entry.target.classList.contains('counter')) {
-          animateCounter(entry.target);
-          observer.unobserve(entry.target);
-        }
       }
     });
   }, { threshold: 0.12 });
 
-  document.querySelectorAll('.fade-in, .timeline-item, .counter').forEach(el => observer.observe(el));
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
   // ─── NAV ACTIVE LINK ───
   const sections = document.querySelectorAll('section[id]');
@@ -1971,6 +1974,141 @@
     document.querySelector('.hero-orb-1').style.transform = `translate(${y * 0.05}px, ${-y * 0.08}px)`;
     document.querySelector('.hero-orb-2').style.transform = `translate(${-y * 0.04}px, ${y * 0.06}px)`;
   });
+
+  // ─── ANIME.JS ANIMATIONS ───
+
+  // 1. Hero entrance — cascade stagger
+  const heroTl = anime.timeline({ easing: 'easeOutExpo' });
+  heroTl
+    .add({ targets: '.anime-hero-badge', opacity: [0, 1], translateY: [-20, 0], duration: 600 })
+    .add({ targets: '.anime-hero-name', opacity: [0, 1], translateX: [-60, 0], duration: 800 }, '-=300')
+    .add({ targets: '.anime-hero-title', opacity: [0, 1], translateX: [-40, 0], duration: 600 }, '-=500')
+    .add({ targets: '.anime-hero-desc', opacity: [0, 1], translateY: [20, 0], duration: 600 }, '-=400')
+    .add({ targets: '.anime-hero-btns', opacity: [0, 1], translateY: [20, 0], duration: 500 }, '-=300')
+    .add({ targets: '.anime-hero-stats', opacity: [0, 1], translateY: [20, 0], duration: 500 }, '-=300')
+    .add({ targets: '.anime-hero-card', opacity: [0, 1], translateX: [80, 0], scale: [0.92, 1], duration: 900 }, '-=900');
+
+  // 2. Orbs morphing continu
+  anime({
+    targets: '.hero-orb-1',
+    borderRadius: ['40% 60% 70% 30% / 40% 50% 60% 50%', '60% 40% 30% 70% / 60% 30% 70% 40%'],
+    duration: 8000, easing: 'easeInOutSine', loop: true, direction: 'alternate'
+  });
+  anime({
+    targets: '.hero-orb-2',
+    borderRadius: ['60% 40% 50% 50% / 30% 60% 40% 70%', '40% 60% 60% 40% / 50% 40% 60% 50%'],
+    duration: 10000, easing: 'easeInOutSine', loop: true, direction: 'alternate'
+  });
+
+  // 3. Skill tags — stagger au scroll
+  const skillObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        anime({
+          targets: entry.target.querySelectorAll('.skill-tag'),
+          opacity: [0, 1], translateX: [-18, 0],
+          duration: 500, easing: 'easeOutExpo',
+          delay: anime.stagger(40)
+        });
+        skillObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.skills-group').forEach(g => skillObserver.observe(g));
+
+  // 4. Project cards — stagger avec léger rebond
+  const projectObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        anime({
+          targets: '.project-card',
+          opacity: [0, 1], translateY: [40, 0], scale: [0.96, 1],
+          duration: 700, easing: 'easeOutBack',
+          delay: anime.stagger(80)
+        });
+        projectObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  const projectGrid = document.querySelector('.projects-grid');
+  if (projectGrid) projectObserver.observe(projectGrid);
+
+  // 5. Counters via anime.js (remplace setInterval)
+  document.querySelectorAll('.counter').forEach(el => {
+    const animeCounterObs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const target = parseInt(el.dataset.target);
+          anime({ targets: { val: 0 }, val: target, duration: 1800, easing: 'easeOutExpo',
+            update: function(a) { el.textContent = Math.floor(a.animations[0].currentValue); }
+          });
+          animeCounterObs.unobserve(el);
+        }
+      });
+    }, { threshold: 0.5 });
+    animeCounterObs.observe(el);
+  });
+
+  // 6. Timeline items — slide depuis la gauche en stagger
+  const timelineObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        anime({
+          targets: entry.target,
+          opacity: [0, 1], translateX: [-50, 0],
+          duration: 700, easing: 'easeOutExpo'
+        });
+        timelineObs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.timeline-item').forEach(el => {
+    el.style.opacity = '0';
+    timelineObs.observe(el);
+  });
+
+  // 7. Section titles — underline qui s'étend
+  const titleObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        anime({
+          targets: entry.target.querySelector('.section-divider'),
+          width: ['0%', '100%'], duration: 800, easing: 'easeOutExpo'
+        });
+        titleObs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  document.querySelectorAll('.section-header').forEach(el => titleObs.observe(el));
+
+  // 8. Boutons magnétiques
+  document.querySelectorAll('.magnetic').forEach(btn => {
+    btn.addEventListener('mousemove', e => {
+      const r = btn.getBoundingClientRect();
+      const x = e.clientX - r.left - r.width / 2;
+      const y = e.clientY - r.top - r.height / 2;
+      anime({ targets: btn, translateX: x * 0.25, translateY: y * 0.25, duration: 300, easing: 'easeOutExpo' });
+    });
+    btn.addEventListener('mouseleave', () => {
+      anime({ targets: btn, translateX: 0, translateY: 0, duration: 500, easing: 'easeOutElastic(1, 0.5)' });
+    });
+  });
+
+  // 9. Cert cards pop-in
+  const certObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        anime({
+          targets: entry.target.querySelectorAll('.cert-card, .edu-card'),
+          opacity: [0, 1], scale: [0.88, 1], translateY: [30, 0],
+          duration: 600, easing: 'easeOutBack', delay: anime.stagger(100)
+        });
+        certObs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  const certSection = document.getElementById('certifications');
+  if (certSection) certObs.observe(certSection);
 </script>
 </body>
 </html>
